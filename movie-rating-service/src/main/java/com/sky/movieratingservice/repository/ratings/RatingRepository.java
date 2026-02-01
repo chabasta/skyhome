@@ -17,6 +17,8 @@ public interface RatingRepository extends JpaRepository<Rating, UUID> {
 
     Optional<Rating> findByUserIdAndMovieId(UUID userId, UUID movieId);
 
+    Page<Rating> findAllByUserId(UUID userId, Pageable pageable);
+
     @Modifying
     @Query(value = """
             insert into ratings (id, user_id, movie_id, value, created_at, updated_at)

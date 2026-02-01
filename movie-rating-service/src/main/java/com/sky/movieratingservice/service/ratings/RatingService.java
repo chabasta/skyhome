@@ -1,6 +1,7 @@
 package com.sky.movieratingservice.service.ratings;
 
 import com.sky.movieratingservice.api.dto.RatingResponse;
+import com.sky.movieratingservice.api.dto.RatingSummaryResponse;
 import com.sky.movieratingservice.entity.Rating;
 import com.sky.movieratingservice.mapper.ratings.RatingMapper;
 import com.sky.movieratingservice.ratings.events.RatingChangedEvent;
@@ -63,5 +64,26 @@ public class RatingService {
         ratingRepository.delete(rating);
         eventPublisher.publishEvent(new RatingChangedEvent(movieId));
     }
-}
 
+    public RatingSummaryResponse getMyRating(UUID userId, UUID movieId) {
+        Rating rating = ratingRepository.findByUserIdAndMovieId(userId, movieId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Rating not found"));
+        return new RatingSummaryResponse(
+                rating.getMovie().getId(),
+                rating.getValue(),
+                rating.getCreatedAt(),
+                rating.getUpdatedAt()
+        );
+    }
+
+    public org.springframework.data.domain.Page<RatingSummaryResponse> listMyRatings(UUID userId,
+                                                                                      org.springframework.data.domain.Pageable pageable) {
+        return ratingRepository.findAllByUserId(userId, pageable)
+                .map(rating -> new RatingSummaryResponse(
+                        rating.getMovie().getId(),
+                        rating.getValue(),
+                        rating.getCreatedAt(),
+                        rating.getUpdatedAt()
+                ));
+    }
+}

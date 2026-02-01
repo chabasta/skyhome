@@ -2,6 +2,7 @@ package com.sky.movieratingservice.api.controller.movies;
 
 import com.sky.movieratingservice.api.dto.MovieResponse;
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
+import com.sky.movieratingservice.security.JwtService;
 import com.sky.movieratingservice.service.movies.MovieService;
 import com.sky.movieratingservice.service.ranking.RankingStrategy;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,9 @@ class MovieControllerTest {
 
     @MockitoBean
     private MovieService movieService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     void listMoviesReturnsPage() throws Exception {
