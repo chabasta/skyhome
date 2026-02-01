@@ -8,3 +8,4 @@ public interface TopRatedMovieView {
     Double getAvgRating();
     Long getRatingsCount();
 }
+

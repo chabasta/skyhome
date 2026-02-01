@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.repository;
+package com.sky.movieratingservice.repository.users;
 
 import com.sky.movieratingservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,3 +12,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByEmail(String email);
 }
+

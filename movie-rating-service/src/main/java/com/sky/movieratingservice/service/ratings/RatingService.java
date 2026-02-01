@@ -1,14 +1,14 @@
-package com.sky.movieratingservice.service;
+package com.sky.movieratingservice.service.ratings;
 
 import com.sky.movieratingservice.api.dto.RatingResponse;
 import com.sky.movieratingservice.entity.Movie;
 import com.sky.movieratingservice.entity.Rating;
 import com.sky.movieratingservice.entity.User;
-import com.sky.movieratingservice.events.RatingChangedEvent;
-import com.sky.movieratingservice.mapper.RatingMapper;
-import com.sky.movieratingservice.repository.MovieRepository;
-import com.sky.movieratingservice.repository.RatingRepository;
-import com.sky.movieratingservice.repository.UserRepository;
+import com.sky.movieratingservice.mapper.ratings.RatingMapper;
+import com.sky.movieratingservice.ratings.events.RatingChangedEvent;
+import com.sky.movieratingservice.repository.movies.MovieRepository;
+import com.sky.movieratingservice.repository.ratings.RatingRepository;
+import com.sky.movieratingservice.repository.users.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -73,3 +73,4 @@ public class RatingService {
         eventPublisher.publishEvent(new RatingChangedEvent(movieId));
     }
 }
+

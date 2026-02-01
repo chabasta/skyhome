@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.config;
+package com.sky.movieratingservice.shared.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
@@ -22,3 +22,4 @@ public class CacheConfig {
         return manager;
     }
 }
+

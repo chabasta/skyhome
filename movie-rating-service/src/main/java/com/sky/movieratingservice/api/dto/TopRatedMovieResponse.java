@@ -9,3 +9,4 @@ public record TopRatedMovieResponse(
         BigDecimal avgRating,
         long ratingCount
 ) {}
+

@@ -11,3 +11,4 @@ public record RatingRequest(
         Short value
 ) {
 }
+

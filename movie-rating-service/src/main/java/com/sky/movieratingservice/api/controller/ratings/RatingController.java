@@ -1,8 +1,8 @@
-package com.sky.movieratingservice.api;
+package com.sky.movieratingservice.api.controller.ratings;
 
 import com.sky.movieratingservice.api.dto.RatingRequest;
 import com.sky.movieratingservice.api.dto.RatingResponse;
-import com.sky.movieratingservice.service.RatingService;
+import com.sky.movieratingservice.service.ratings.RatingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,3 +37,4 @@ public class RatingController {
         ratingService.deleteRating(userId, movieId);
     }
 }
+

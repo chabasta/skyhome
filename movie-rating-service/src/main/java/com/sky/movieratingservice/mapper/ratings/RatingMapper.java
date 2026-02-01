@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.mapper;
+package com.sky.movieratingservice.mapper.ratings;
 
 import com.sky.movieratingservice.api.dto.RatingResponse;
 import com.sky.movieratingservice.entity.Rating;
@@ -18,3 +18,4 @@ public class RatingMapper {
         );
     }
 }
+

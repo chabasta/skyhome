@@ -9,22 +9,22 @@ import java.math.RoundingMode;
 import java.util.Optional;
 
 @Component
-public class AverageRatingTopRatedCalculator implements TopRatedCalculator {
+public class MostRatedTopRatedCalculator implements TopRatedCalculator {
 
     private final RatingRepository ratingRepository;
 
-    public AverageRatingTopRatedCalculator(RatingRepository ratingRepository) {
+    public MostRatedTopRatedCalculator(RatingRepository ratingRepository) {
         this.ratingRepository = ratingRepository;
     }
 
     @Override
     public RankingStrategy getKey() {
-        return RankingStrategy.AVERAGE;
+        return RankingStrategy.MOST_RATED;
     }
 
     @Override
     public Optional<TopRatedMovieResponse> getTopRated() {
-        return ratingRepository.findTopRated().map(view -> new TopRatedMovieResponse(
+        return ratingRepository.findMostRated().map(view -> new TopRatedMovieResponse(
                 view.getMovieId(),
                 view.getMovieName(),
                 BigDecimal.valueOf(view.getAvgRating()).setScale(2, RoundingMode.HALF_UP),

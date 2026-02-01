@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.events;
+package com.sky.movieratingservice.ratings.events;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -22,3 +22,4 @@ public class RatingChangedListener {
         }
     }
 }
+

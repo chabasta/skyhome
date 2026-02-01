@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.mapper;
+package com.sky.movieratingservice.mapper.movies;
 
 import com.sky.movieratingservice.api.dto.MovieResponse;
 import com.sky.movieratingservice.entity.Movie;
@@ -11,3 +11,4 @@ public class MovieMapper {
         return new MovieResponse(e.getId(), e.getName(), e.getCreatedAt());
     }
 }
+

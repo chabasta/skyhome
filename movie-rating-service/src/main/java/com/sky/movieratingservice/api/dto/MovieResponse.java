@@ -9,3 +9,4 @@ public record MovieResponse(
         Instant createdAt
 ) {
 }
+
