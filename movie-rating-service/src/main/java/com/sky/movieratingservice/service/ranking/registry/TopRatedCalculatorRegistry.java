@@ -1,5 +1,7 @@
-package com.sky.movieratingservice.service.ranking;
+package com.sky.movieratingservice.service.ranking.registry;
 
+import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
+import com.sky.movieratingservice.service.ranking.strategy.TopRatedCalculator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

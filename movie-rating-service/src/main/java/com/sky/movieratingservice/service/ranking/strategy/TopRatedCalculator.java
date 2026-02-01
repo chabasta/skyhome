@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.service.ranking;
+package com.sky.movieratingservice.service.ranking.strategy;
 
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 

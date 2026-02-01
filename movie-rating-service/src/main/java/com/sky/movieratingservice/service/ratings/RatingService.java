@@ -4,11 +4,13 @@ import com.sky.movieratingservice.api.dto.RatingResponse;
 import com.sky.movieratingservice.api.dto.RatingSummaryResponse;
 import com.sky.movieratingservice.entity.Rating;
 import com.sky.movieratingservice.mapper.ratings.RatingMapper;
-import com.sky.movieratingservice.ratings.events.RatingChangedEvent;
+import com.sky.movieratingservice.events.RatingChangedEvent;
 import com.sky.movieratingservice.repository.movies.MovieRepository;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.repository.users.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -76,8 +78,8 @@ public class RatingService {
         );
     }
 
-    public org.springframework.data.domain.Page<RatingSummaryResponse> listMyRatings(UUID userId,
-                                                                                      org.springframework.data.domain.Pageable pageable) {
+    public Page<RatingSummaryResponse> listMyRatings(UUID userId,
+                                                     Pageable pageable) {
         return ratingRepository.findAllByUserId(userId, pageable)
                 .map(rating -> new RatingSummaryResponse(
                         rating.getMovie().getId(),

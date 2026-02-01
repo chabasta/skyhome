@@ -67,6 +67,13 @@ Errors follow RFC 7807 `ProblemDetail` with custom properties:
 - Prometheus metrics: `GET /actuator/prometheus`
 - Grafana + Loki for logs (via Docker Compose)
 - Request logging: method, path, status, duration
+- Metrics collected: standard Spring/JVM + HTTP server requests (`http.server.requests`)
+
+### Quick Checks
+1) Prometheus targets: `http://localhost:9090/targets` (service should be **UP**)
+2) Metrics endpoint: `http://localhost:8080/actuator/prometheus`
+3) Grafana: `http://localhost:3000` (admin/admin)
+4) Loki logs: Explore → datasource **Loki** → `{container="movie-rating-service"}`
 
 ## Running Locally
 ### With Docker Compose
@@ -85,9 +92,16 @@ Prometheus: `http://localhost:9090`
 ```
 ./gradlew test
 ```
+Test coverage overview:
+- Unit: ranking strategy calculators (pure Mockito)
+- Integration: repositories + services with Testcontainers (Postgres + Liquibase)
+- Web slice: controllers via MockMvc
 
 ## JWT Config
 Environment variables:
 - `JWT_SECRET` (HMAC secret)
 - `security.jwt.issuer` (default: `movie-rating-service`)
 - `security.jwt.ttl` (default: `PT30M`)
+
+### Future Improvements
+- Add refresh tokens for long-lived sessions.

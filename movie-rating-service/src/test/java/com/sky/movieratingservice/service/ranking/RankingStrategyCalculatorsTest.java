@@ -1,5 +1,8 @@
 package com.sky.movieratingservice.service.ranking;
 
+import com.sky.movieratingservice.service.ranking.calculator.AverageRatingTopRatedCalculator;
+import com.sky.movieratingservice.service.ranking.calculator.MostRatedTopRatedCalculator;
+import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.repository.view.TopRatedMovieView;
 import org.junit.jupiter.api.Test;

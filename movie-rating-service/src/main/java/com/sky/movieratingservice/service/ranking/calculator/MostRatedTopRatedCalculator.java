@@ -1,7 +1,9 @@
-package com.sky.movieratingservice.service.ranking;
+package com.sky.movieratingservice.service.ranking.calculator;
 
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
+import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
+import com.sky.movieratingservice.service.ranking.strategy.TopRatedCalculator;
 import org.springframework.stereotype.Component;
 import org.springframework.data.domain.PageRequest;
 

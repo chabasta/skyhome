@@ -4,7 +4,7 @@ import com.sky.movieratingservice.api.dto.MovieResponse;
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.security.JwtService;
 import com.sky.movieratingservice.service.movies.MovieService;
-import com.sky.movieratingservice.service.ranking.RankingStrategy;
+import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

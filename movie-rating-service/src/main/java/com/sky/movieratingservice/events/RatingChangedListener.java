@@ -1,4 +1,4 @@
-package com.sky.movieratingservice.ratings.events;
+package com.sky.movieratingservice.events;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

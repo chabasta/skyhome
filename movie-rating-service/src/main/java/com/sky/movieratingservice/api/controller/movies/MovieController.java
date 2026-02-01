@@ -4,7 +4,7 @@ package com.sky.movieratingservice.api.controller.movies;
 import com.sky.movieratingservice.api.dto.MovieResponse;
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.service.movies.MovieService;
-import com.sky.movieratingservice.service.ranking.RankingStrategy;
+import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
