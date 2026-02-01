@@ -3,6 +3,7 @@ package com.sky.movieratingservice.service.ranking;
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,11 +25,14 @@ public class MostRatedTopRatedCalculator implements TopRatedCalculator {
 
     @Override
     public Optional<TopRatedMovieResponse> getTopRated() {
-        return ratingRepository.findMostRated().map(view -> new TopRatedMovieResponse(
-                view.getMovieId(),
-                view.getMovieName(),
-                BigDecimal.valueOf(view.getAvgRating()).setScale(2, RoundingMode.HALF_UP),
-                view.getRatingsCount()
-        ));
+        return ratingRepository.findMostRated(PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .map(view -> new TopRatedMovieResponse(
+                        view.getMovieId(),
+                        view.getMovieName(),
+                        BigDecimal.valueOf(view.getAvgRating()).setScale(2, RoundingMode.HALF_UP),
+                        view.getRatingsCount()
+                ));
     }
 }

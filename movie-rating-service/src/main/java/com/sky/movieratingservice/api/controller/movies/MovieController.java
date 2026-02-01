@@ -31,10 +31,10 @@ public class MovieController {
     }
 
     @GetMapping("/top-rated")
-    public TopRatedMovieResponse topRatedMovie(
-            @RequestParam(name = "strategy", defaultValue = "AVERAGE") RankingStrategy strategy
+    public Page<TopRatedMovieResponse> topRatedMovie(
+            @RequestParam(name = "strategy", defaultValue = "AVERAGE") RankingStrategy strategy,
+            @PageableDefault(size = 20) Pageable pageable
     ) {
-        return movieQueryService.getTopRated(strategy);
+        return movieQueryService.getTopRated(strategy, pageable);
     }
 }
-

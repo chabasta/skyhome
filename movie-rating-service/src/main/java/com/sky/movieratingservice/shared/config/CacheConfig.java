@@ -17,8 +17,9 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager("topRatedMovie");
         manager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterWrite(Duration.ofMinutes(5))
-                .maximumSize(10_000));
+                .expireAfterWrite(Duration.ofSeconds(90))
+                .maximumSize(10_000)
+                .recordStats());
         return manager;
     }
 }
