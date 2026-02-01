@@ -1,25 +1,49 @@
 @baseUrl = http://localhost:8080
-@email = user@example.com
-@password = Password123!
+@email1 = user1@example.com
+@password1 = Password123!
+@email2 = user2@example.com
+@password2 = Password123!
 @movieId = 11111111-1111-1111-1111-111111111111
 
-### Register
+### (Use-case) Register user1
 POST {{baseUrl}}/api/v1/auth/register
 Content-Type: application/json
 
 {
-  "email": "{{email}}",
-  "password": "{{password}}"
+  "email": "{{email1}}",
+  "password": "{{password1}}"
 }
 
-### Login
+### (Use-case) Login user1 -> sets accessTokenUser1
 POST {{baseUrl}}/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "{{email}}",
-  "password": "{{password}}"
+  "email": "{{email1}}",
+  "password": "{{password1}}"
 }
+
+> {% client.global.set("accessTokenUser1", response.body.accessToken); %}
+
+### (Use-case) Register user2
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email2}}",
+  "password": "{{password2}}"
+}
+
+### (Use-case) Login user2 -> sets accessTokenUser2
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email2}}",
+  "password": "{{password2}}"
+}
+
+> {% client.global.set("accessTokenUser2", response.body.accessToken); %}
 
 ### List movies (public)
 GET {{baseUrl}}/api/v1/movies?page=0&size=20
@@ -33,25 +57,57 @@ Accept: application/json
 GET {{baseUrl}}/api/v1/movies/top-rated/one?strategy=AVERAGE
 Accept: application/json
 
-### Add or update rating (authorized)
+### (Use-case) User1 adds/updates rating
 PUT {{baseUrl}}/api/v1/ratings/{{movieId}}
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{accessTokenUser1}}
 Content-Type: application/json
 
 {
   "value": 8
 }
 
-### Get my rating for movie (authorized)
+### (Use-case) User1 checks own rating
 GET {{baseUrl}}/api/v1/ratings/{{movieId}}
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{accessTokenUser1}}
 Accept: application/json
 
-### List my ratings (authorized)
+### (Use-case) User1 list own ratings
 GET {{baseUrl}}/api/v1/ratings/my?page=0&size=20&sort=updatedAt,desc
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{accessTokenUser1}}
 Accept: application/json
 
-### Delete rating (authorized)
+### (Use-case) User1 updates rating again
+PUT {{baseUrl}}/api/v1/ratings/{{movieId}}
+Authorization: Bearer {{accessTokenUser1}}
+Content-Type: application/json
+
+{
+  "value": 9
+}
+
+### (Use-case) User1 checks rating after update
+GET {{baseUrl}}/api/v1/ratings/{{movieId}}
+Authorization: Bearer {{accessTokenUser1}}
+Accept: application/json
+
+### (Use-case) User2 adds own rating for same movie
+PUT {{baseUrl}}/api/v1/ratings/{{movieId}}
+Authorization: Bearer {{accessTokenUser2}}
+Content-Type: application/json
+
+{
+  "value": 6
+}
+
+### (Use-case) User2 checks own rating
+GET {{baseUrl}}/api/v1/ratings/{{movieId}}
+Authorization: Bearer {{accessTokenUser2}}
+Accept: application/json
+
+### (Use-case) Top rated after multiple users
+GET {{baseUrl}}/api/v1/movies/top-rated?strategy=AVERAGE&page=0&size=20
+Accept: application/json
+
+### (Use-case) User1 deletes rating
 DELETE {{baseUrl}}/api/v1/ratings/{{movieId}}
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer {{accessTokenUser1}}

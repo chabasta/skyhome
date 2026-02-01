@@ -10,6 +10,7 @@ It provides public movie browsing, authenticated rating management, and top-rate
 - PostgreSQL
 - Caffeine cache
 - Micrometer + Prometheus
+- Grafana + Loki (logs)
 - Testcontainers (integration tests)
 
 ## Design Patterns Used
@@ -64,6 +65,7 @@ Errors follow RFC 7807 `ProblemDetail` with custom properties:
 
 ## Metrics and Logs
 - Prometheus metrics: `GET /actuator/prometheus`
+- Grafana + Loki for logs (via Docker Compose)
 - Request logging: method, path, status, duration
 
 ## Running Locally
@@ -71,6 +73,8 @@ Errors follow RFC 7807 `ProblemDetail` with custom properties:
 ```
 docker compose up --build
 ```
+Grafana: `http://localhost:3000` (admin/admin)  
+Prometheus: `http://localhost:9090`
 
 ### With Gradle
 ```
