@@ -37,4 +37,11 @@ public class MovieController {
     ) {
         return movieQueryService.getTopRated(strategy, pageable);
     }
+
+    @GetMapping("/top-rated/one")
+    public TopRatedMovieResponse topRatedMovieOne(
+            @RequestParam(name = "strategy", defaultValue = "AVERAGE") RankingStrategy strategy
+    ) {
+        return movieQueryService.getTopRatedOne(strategy);
+    }
 }

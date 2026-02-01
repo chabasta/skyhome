@@ -8,6 +8,7 @@ import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.service.ranking.RankingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,16 @@ public class MovieService {
             case AVERAGE -> ratingRepository.findTopRated(pageable).map(this::toResponse);
             case MOST_RATED -> ratingRepository.findMostRated(pageable).map(this::toResponse);
         };
+    }
+
+    public TopRatedMovieResponse getTopRatedOne(RankingStrategy strategy) {
+        return getTopRated(strategy, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND,
+                        "No ratings found"
+                ));
     }
 
     private TopRatedMovieResponse toResponse(com.sky.movieratingservice.repository.view.TopRatedMovieView view) {

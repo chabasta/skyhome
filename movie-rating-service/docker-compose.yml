@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+  app:
+    build: .
+    container_name: movie-rating-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/movierating
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: app
+      JWT_SECRET: dev-local-secret-please-override
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:16
     container_name: movie-rating-db

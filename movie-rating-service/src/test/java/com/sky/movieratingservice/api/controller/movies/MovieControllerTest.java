@@ -103,4 +103,27 @@ class MovieControllerTest {
 
         Mockito.verify(movieService).getTopRated(eq(RankingStrategy.AVERAGE), any());
     }
+
+    @Test
+    void topRatedOneReturnsResponse() throws Exception {
+        UUID movieId = UUID.randomUUID();
+        TopRatedMovieResponse response = new TopRatedMovieResponse(
+                movieId,
+                "Best One",
+                BigDecimal.valueOf(9.5),
+                77L
+        );
+        when(movieService.getTopRatedOne(RankingStrategy.AVERAGE)).thenReturn(response);
+
+        mockMvc.perform(get("/api/v1/movies/top-rated/one")
+                        .param("strategy", "AVERAGE")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.movieId", is(movieId.toString())))
+                .andExpect(jsonPath("$.name", is("Best One")))
+                .andExpect(jsonPath("$.avgRating", is(9.5)))
+                .andExpect(jsonPath("$.ratingCount", is(77)));
+
+        Mockito.verify(movieService).getTopRatedOne(RankingStrategy.AVERAGE);
+    }
 }

@@ -25,9 +25,13 @@ management:
     web:
       exposure:
         include: health,info,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
 
 security:
   jwt:
-    secret: ${JWT_SECRET:dev-secret-change-me-please-change-32bytes}
+    secret: ${JWT_SECRET:dev-local-secret-please-override}
     issuer: movie-rating-service
     ttl: PT30M
