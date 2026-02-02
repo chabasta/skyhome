@@ -4,8 +4,7 @@ import com.sky.movieratingservice.api.dto.MovieResponse;
 import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.mapper.movies.MovieMapper;
 import com.sky.movieratingservice.repository.movies.MovieRepository;
-import com.sky.movieratingservice.repository.ratings.RatingRepository;
-import com.sky.movieratingservice.repository.view.TopRatedMovieView;
+import com.sky.movieratingservice.service.ranking.registry.TopRatedCalculatorRegistry;
 import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,20 +14,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 @Service
 public class MovieService {
 
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
-    private final RatingRepository ratingRepository;
+    private final TopRatedCalculatorRegistry topRatedCalculatorRegistry;
 
-    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper, RatingRepository ratingRepository) {
+    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper, TopRatedCalculatorRegistry topRatedCalculatorRegistry) {
         this.movieRepository = movieRepository;
         this.movieMapper = movieMapper;
-        this.ratingRepository = ratingRepository;
+        this.topRatedCalculatorRegistry = topRatedCalculatorRegistry;
     }
 
     public Page<MovieResponse> listMovies(Pageable pageable) {
@@ -41,10 +37,9 @@ public class MovieService {
             sync = true
     )
     public Page<TopRatedMovieResponse> getTopRated(RankingStrategy strategy, Pageable pageable) {
-        return switch (strategy) {
-            case AVERAGE -> ratingRepository.findTopRated(pageable).map(this::toResponse);
-            case MOST_RATED -> ratingRepository.findMostRated(pageable).map(this::toResponse);
-        };
+        return topRatedCalculatorRegistry
+                .getRequired(strategy)
+                .getTopRated(pageable);
     }
 
     public TopRatedMovieResponse getTopRatedOne(RankingStrategy strategy) {
@@ -56,14 +51,4 @@ public class MovieService {
                         "No ratings found"
                 ));
     }
-
-    private TopRatedMovieResponse toResponse(TopRatedMovieView view) {
-        return new TopRatedMovieResponse(
-                view.getMovieId(),
-                view.getMovieName(),
-                BigDecimal.valueOf(view.getAvgRating()).setScale(2, RoundingMode.HALF_UP),
-                view.getRatingsCount()
-        );
-    }
 }
-

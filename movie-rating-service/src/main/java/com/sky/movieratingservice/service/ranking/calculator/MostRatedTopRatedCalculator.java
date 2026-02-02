@@ -4,12 +4,12 @@ import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import com.sky.movieratingservice.service.ranking.strategy.TopRatedCalculator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
 
 @Component
 public class MostRatedTopRatedCalculator implements TopRatedCalculator {
@@ -26,10 +26,8 @@ public class MostRatedTopRatedCalculator implements TopRatedCalculator {
     }
 
     @Override
-    public Optional<TopRatedMovieResponse> getTopRated() {
-        return ratingRepository.findMostRated(PageRequest.of(0, 1))
-                .stream()
-                .findFirst()
+    public Page<TopRatedMovieResponse> getTopRated(Pageable pageable) {
+        return ratingRepository.findMostRated(pageable)
                 .map(view -> new TopRatedMovieResponse(
                         view.getMovieId(),
                         view.getMovieName(),

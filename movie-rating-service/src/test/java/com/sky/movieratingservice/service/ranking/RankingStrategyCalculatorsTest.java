@@ -3,12 +3,14 @@ package com.sky.movieratingservice.service.ranking;
 import com.sky.movieratingservice.service.ranking.calculator.AverageRatingTopRatedCalculator;
 import com.sky.movieratingservice.service.ranking.calculator.MostRatedTopRatedCalculator;
 import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
+import com.sky.movieratingservice.api.dto.TopRatedMovieResponse;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.repository.view.TopRatedMovieView;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.UUID;
 
@@ -32,9 +34,11 @@ class RankingStrategyCalculatorsTest {
         AverageRatingTopRatedCalculator calculator = new AverageRatingTopRatedCalculator(ratingRepository);
 
         assertThat(calculator.getKey()).isEqualTo(RankingStrategy.AVERAGE);
-        assertThat(calculator.getTopRated()).isPresent();
-        assertThat(calculator.getTopRated().get().avgRating().toString()).isEqualTo("8.67");
-        assertThat(calculator.getTopRated().get().ratingCount()).isEqualTo(12L);
+        Page<TopRatedMovieResponse> page = calculator.getTopRated(PageRequest.of(0, 10));
+        assertThat(page.getContent()).hasSize(1);
+        TopRatedMovieResponse result = page.getContent().get(0);
+        assertThat(result.avgRating().toString()).isEqualTo("8.67");
+        assertThat(result.ratingCount()).isEqualTo(12L);
     }
 
     @Test
@@ -51,10 +55,12 @@ class RankingStrategyCalculatorsTest {
         MostRatedTopRatedCalculator calculator = new MostRatedTopRatedCalculator(ratingRepository);
 
         assertThat(calculator.getKey()).isEqualTo(RankingStrategy.MOST_RATED);
-        assertThat(calculator.getTopRated()).isPresent();
-        assertThat(calculator.getTopRated().get().movieId()).isEqualTo(movieId);
-        assertThat(calculator.getTopRated().get().ratingCount()).isEqualTo(42L);
-        assertThat(calculator.getTopRated().get().avgRating().toString()).isEqualTo("9.13");
+        Page<TopRatedMovieResponse> page = calculator.getTopRated(PageRequest.of(0, 10));
+        assertThat(page.getContent()).hasSize(1);
+        TopRatedMovieResponse result = page.getContent().get(0);
+        assertThat(result.movieId()).isEqualTo(movieId);
+        assertThat(result.ratingCount()).isEqualTo(42L);
+        assertThat(result.avgRating().toString()).isEqualTo("9.13");
     }
 
     @Test
@@ -64,7 +70,7 @@ class RankingStrategyCalculatorsTest {
 
         AverageRatingTopRatedCalculator calculator = new AverageRatingTopRatedCalculator(ratingRepository);
 
-        assertThat(calculator.getTopRated()).isEmpty();
+        assertThat(calculator.getTopRated(PageRequest.of(0, 10)).getContent()).isEmpty();
     }
 
     private static TopRatedMovieView view(UUID movieId, String name, Double avgRating, Long count) {

@@ -16,7 +16,7 @@ It provides public movie browsing, authenticated rating management, and top-rate
 ## Design Patterns Used
 - **Repository Pattern**: `MovieRepository`, `RatingRepository`, `UserRepository` encapsulate DB access.
 - **Service Layer Pattern**: `MovieService`, `RatingService`, `AuthService` hold business logic.
-- **Strategy Pattern**: `RankingStrategy` selects the ranking rule (average vs most-rated).
+- **Strategy Pattern**: `RankingStrategy` + `TopRatedCalculatorRegistry` select ranking rules (average vs most-rated).
 - **DTO Pattern**: Request/response objects separate API contracts from entities.
 - **Cache-Aside Pattern**: `@Cacheable` for top-rated queries, invalidated on rating changes.
 - **Observer/Event Listener**: `RatingChangedEvent` triggers cache invalidation.
@@ -34,7 +34,7 @@ It provides public movie browsing, authenticated rating management, and top-rate
   `strategy`: `AVERAGE` or `MOST_RATED`.
 
 - **GET** `/api/v1/movies/top-rated/one?strategy=AVERAGE`  
-  Get a single top-rated movie.
+  Get a single top-rated movie (top-1).
 
 ### Auth
 - **POST** `/api/v1/auth/register`  
@@ -105,3 +105,4 @@ Environment variables:
 
 ### Future Improvements
 - Add refresh tokens for long-lived sessions.
+- Introduce domain-specific exceptions with stable error codes as the API grows.
