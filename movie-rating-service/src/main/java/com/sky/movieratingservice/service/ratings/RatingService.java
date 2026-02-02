@@ -8,6 +8,8 @@ import com.sky.movieratingservice.events.RatingChangedEvent;
 import com.sky.movieratingservice.repository.movies.MovieRepository;
 import com.sky.movieratingservice.repository.ratings.RatingRepository;
 import com.sky.movieratingservice.repository.users.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class RatingService {
+
+    private static final Logger log = LoggerFactory.getLogger(RatingService.class);
 
     private final RatingRepository ratingRepository;
     private final MovieRepository movieRepository;
@@ -55,6 +59,7 @@ public class RatingService {
         Instant now = Instant.now();
         ratingRepository.upsert(UUID.randomUUID(), userId, movieId, value, now);
         eventPublisher.publishEvent(new RatingChangedEvent(movieId));
+        log.info("Rating upsert userId={} movieId={} value={}", userId, movieId, value);
         return ratingRepository.findByUserIdAndMovieId(userId, movieId)
                 .map(ratingMapper::toResponse)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Rating not found"));
@@ -65,6 +70,7 @@ public class RatingService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Rating not found"));
         ratingRepository.delete(rating);
         eventPublisher.publishEvent(new RatingChangedEvent(movieId));
+        log.info("Rating deleted userId={} movieId={}", userId, movieId);
     }
 
     public RatingSummaryResponse getMyRating(UUID userId, UUID movieId) {

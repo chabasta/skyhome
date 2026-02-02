@@ -8,6 +8,8 @@ import com.sky.movieratingservice.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.Locale;
@@ -18,6 +20,8 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class AuthService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +50,7 @@ public class AuthService {
                 Instant.now()
         );
         userRepository.save(user);
+        log.info("Registered user {}", user.getId());
     }
 
     public TokenResponse login(String email, String password) {
@@ -56,6 +61,7 @@ public class AuthService {
             throw new ResponseStatusException(UNAUTHORIZED, "Invalid credentials");
         }
         String token = jwtService.issueToken(user);
+        log.info("User login {}", user.getId());
         return new TokenResponse(token, "Bearer", jwtProperties.ttl().toSeconds());
     }
 }

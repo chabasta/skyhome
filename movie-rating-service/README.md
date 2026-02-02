@@ -68,6 +68,7 @@ Errors follow RFC 7807 `ProblemDetail` with custom properties:
 - Grafana + Loki for logs (via Docker Compose)
 - Request logging: method, path, status, duration
 - Metrics collected: standard Spring/JVM + HTTP server requests (`http.server.requests`)
+- Grafana dashboard auto-provisioned at startup (metrics + logs).
 
 ### Quick Checks
 1) Prometheus targets: `http://localhost:9090/targets` (service should be **UP**)
