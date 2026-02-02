@@ -16,7 +16,7 @@ public class User {
     private UUID id;
 
     @Column(nullable = false)
-    private String email; // stored lower-case by application policy
+    private String email;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
