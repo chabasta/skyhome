@@ -11,6 +11,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.BindException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,6 +39,28 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ProblemDetail> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request) {
         List<Map<String, String>> details = ex.getConstraintViolations()
+                .stream()
+                .map(this::toDetail)
+                .toList();
+
+        return build(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Validation failed", details, request.getRequestURI());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ProblemDetail> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        String expected = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "value";
+        String actual = ex.getValue() != null ? ex.getValue().toString() : "null";
+        List<Map<String, String>> details = List.of(Map.of(
+                "field", ex.getName(),
+                "message", "Expected " + expected + " but got " + actual
+        ));
+        return build(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Invalid parameter", details, request.getRequestURI());
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ProblemDetail> handleBind(BindException ex, HttpServletRequest request) {
+        List<Map<String, String>> details = ex.getBindingResult()
+                .getFieldErrors()
                 .stream()
                 .map(this::toDetail)
                 .toList();

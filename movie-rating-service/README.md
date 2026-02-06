@@ -107,3 +107,16 @@ Environment variables:
 ### Future Improvements
 - Add refresh tokens for long-lived sessions.
 - Introduce domain-specific exceptions with stable error codes as the API grows.
+
+## Edge Cases And Invariants
+| Case | Endpoint | Response |
+| --- | --- | --- |
+| Invalid JSON body | Any JSON endpoint | `400 Bad Request` with `ProblemDetail` (`code=BAD_REQUEST`) |
+| Validation error (DTO/params) | Any validated endpoint | `400 Bad Request` with `ProblemDetail` (`code=VALIDATION_ERROR`) |
+| Unknown ranking strategy | `GET /api/v1/movies/top-rated`, `GET /api/v1/movies/top-rated/one` | `400 Bad Request` with `ProblemDetail` |
+| No ratings for top-1 | `GET /api/v1/movies/top-rated/one` | `204 No Content` |
+| Missing/invalid token | Any `/api/v1/ratings/**` endpoint | `401 Unauthorized` with `ProblemDetail` |
+| Access denied | Any protected endpoint | `403 Forbidden` with `ProblemDetail` |
+| Movie/user/rating not found | Ratings endpoints | `404 Not Found` with `ProblemDetail` |
+| Duplicate email on register | `POST /api/v1/auth/register` | `409 Conflict` with `ProblemDetail` |
+| Rating upsert invariant broken (record not found after upsert) | `PUT /api/v1/ratings/{movieId}` | `500 Internal Server Error` with `ProblemDetail` |

@@ -15,8 +15,7 @@ import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Service
 public class AuthService {
@@ -41,7 +40,7 @@ public class AuthService {
     public void register(String email, String password) {
         String normalized = email.toLowerCase(Locale.ROOT).trim();
         if (userRepository.existsByEmail(normalized)) {
-            throw new ResponseStatusException(BAD_REQUEST, "Email already registered");
+            throw new ResponseStatusException(CONFLICT, "Email already registered");
         }
         User user = new User(
                 UUID.randomUUID(),

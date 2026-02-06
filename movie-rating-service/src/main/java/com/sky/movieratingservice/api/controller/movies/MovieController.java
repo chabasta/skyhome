@@ -8,6 +8,7 @@ import com.sky.movieratingservice.service.ranking.strategy.RankingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +40,11 @@ public class MovieController {
     }
 
     @GetMapping("/top-rated/one")
-    public TopRatedMovieResponse topRatedMovieOne(
+    public ResponseEntity<TopRatedMovieResponse> topRatedMovieOne(
             @RequestParam(name = "strategy", defaultValue = "AVERAGE") RankingStrategy strategy
     ) {
-        return movieQueryService.getTopRatedOne(strategy);
+        return movieQueryService.getTopRatedOne(strategy)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

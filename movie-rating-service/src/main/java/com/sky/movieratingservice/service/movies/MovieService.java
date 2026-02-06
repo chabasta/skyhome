@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -42,13 +42,9 @@ public class MovieService {
                 .getTopRated(pageable);
     }
 
-    public TopRatedMovieResponse getTopRatedOne(RankingStrategy strategy) {
+    public Optional<TopRatedMovieResponse> getTopRatedOne(RankingStrategy strategy) {
         return getTopRated(strategy, PageRequest.of(0, 1))
                 .stream()
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "No ratings found"
-                ));
+                .findFirst();
     }
 }

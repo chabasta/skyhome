@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -62,7 +63,10 @@ public class RatingService {
         log.info("Rating upsert userId={} movieId={} value={}", userId, movieId, value);
         return ratingRepository.findByUserIdAndMovieId(userId, movieId)
                 .map(ratingMapper::toResponse)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Rating not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        INTERNAL_SERVER_ERROR,
+                        "Rating upsert failed"
+                ));
     }
 
     public void deleteRating(UUID userId, UUID movieId) {
